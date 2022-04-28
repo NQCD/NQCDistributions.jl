@@ -5,6 +5,7 @@ using Distributions: Normal
 using Random: rand!
 using RingPolymerArrays: RingPolymerArray, eachbead
 using Unitful
+using ComponentArrays: ComponentVector
 
 @testset "UnivariateFill" begin
     d = UnivariateFill(Normal(), (3,2))
@@ -141,3 +142,25 @@ end
 @safetestset "PositionHarmonicRingPolymer" begin include("harmonic_ring_polymer.jl") end
 
 @safetestset "ElectronicDistributions" begin include("electronic.jl") end
+
+@testset "DynamicalDistribution" begin
+    v = FixedValue(1.0, (3,2))
+    r = FixedValue(2.0, (2,2))
+    @test_throws DimensionMismatch d = DynamicalDistribution(v, r)
+    r = FixedValue(2.0, (3,2))
+    d = DynamicalDistribution(v, r)
+    @test d[100] == ComponentVector{Float64}(
+        v=[1.0 1.0; 1.0 1.0; 1.0 1.0],
+        r=[2.0 2.0; 2.0 2.0; 2.0 2.0]
+    )
+    @test rand(d) == ComponentVector{Float64}(
+        v=[1.0 1.0; 1.0 1.0; 1.0 1.0],
+        r=[2.0 2.0; 2.0 2.0; 2.0 2.0]
+    )
+    for i in d
+        @test i == ComponentVector{Float64}(
+            v=[1.0 1.0; 1.0 1.0; 1.0 1.0],
+            r=[2.0 2.0; 2.0 2.0; 2.0 2.0]
+        )
+    end
+end

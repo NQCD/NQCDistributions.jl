@@ -7,6 +7,7 @@ using UnitfulAtomic: austrip
 using Distributions: Normal
 using RingPolymerArrays: NormalModeTransformation, transform_from_normal_modes!
 using LinearAlgebra: mul!, diagind
+using ComponentArrays: ComponentVector
 
 include("basic_sampleables.jl")
 export UnivariateFill
@@ -32,5 +33,8 @@ export Adiabatic, Diabatic
 export PureState
 export MixedState
 export FermiDiracState
+
+include("dynamical_distribution.jl")
+export DynamicalDistribution
 
 end

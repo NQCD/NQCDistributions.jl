@@ -17,6 +17,8 @@ end
 Base.eltype(d::UnivariateFill) = Matrix{eltype(d.sampleable)}
 Base.size(d::UnivariateFill) = d.dims
 Base.getindex(d::UnivariateFill, _) = rand(d)
+Base.firstindex(::UnivariateFill) = 1
+Base.lastindex(::UnivariateFill) = 1
 
 """
     UnivariateArray{N,S<:Sampleable{Univariate}}
@@ -41,6 +43,8 @@ end
 Base.eltype(d::UnivariateArray{N}) where {N} = Array{eltype(eltype(d.sampleable)),N}
 Base.size(d::UnivariateArray) = size(d.sampleable)
 Base.getindex(d::UnivariateArray, _) = rand(d)
+Base.firstindex(::UnivariateArray) = 1
+Base.lastindex(::UnivariateArray) = 1
 
 """
     FixedArray{S<:AbstractArray}
@@ -60,6 +64,8 @@ end
 Base.eltype(d::FixedArray) = typeof(d.value)
 Base.size(d::FixedArray) = size(d.value)
 Base.getindex(d::FixedArray, _) = rand(d)
+Base.firstindex(::FixedArray) = 1
+Base.lastindex(::FixedArray) = 1
 
 """
     FixedValue{S<:Real}
@@ -80,6 +86,8 @@ end
 Base.eltype(d::FixedValue) = Matrix{typeof(d.value)}
 Base.size(d::FixedValue) = d.dims
 Base.getindex(d::FixedValue, _) = rand(d)
+Base.firstindex(::FixedValue) = 1
+Base.lastindex(::FixedValue) = 1
 
 """
     ConfigurationVector{S<:AbstractVector}
@@ -99,6 +107,8 @@ end
 Base.eltype(d::ConfigurationVector) = eltype(d.configurations)
 Base.size(d::ConfigurationVector) = size(first(d.configurations))
 Base.getindex(d::ConfigurationVector, i) = copy(d.configurations[i])
+Base.firstindex(d::ConfigurationVector) = firstindex(d.configurations)
+Base.lastindex(d::ConfigurationVector) = lastindex(d.configurations)
 
 """
     RingPolymerWrapper{S}
@@ -133,3 +143,5 @@ function Base.getindex(d::RingPolymerWrapper, i)
     end
     return out
 end
+Base.firstindex(d::RingPolymerWrapper) = firstindex(d.sampleable)
+Base.lastindex(d::RingPolymerWrapper) = lastindex(d.sampleable)

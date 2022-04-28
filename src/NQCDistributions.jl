@@ -6,7 +6,7 @@ using RingPolymerArrays: RingPolymerArray, eachbead
 using UnitfulAtomic: austrip
 using Distributions: Normal
 using RingPolymerArrays: NormalModeTransformation, transform_from_normal_modes!
-using LinearAlgebra: mul!
+using LinearAlgebra: mul!, diagind
 
 include("basic_sampleables.jl")
 export UnivariateFill
@@ -26,5 +26,11 @@ export PositionHarmonicWigner
 
 include("nuclear/harmonic_ring_polymer.jl")
 export PositionHarmonicRingPolymer
+
+include("electronic/electronic.jl")
+export Adiabatic, Diabatic
+export PureState
+export MixedState
+export FermiDiracState
 
 end

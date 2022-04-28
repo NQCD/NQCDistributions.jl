@@ -139,3 +139,5 @@ end
 
 @safetestset "HarmonicWigner" begin include("harmonic_wigner.jl") end
 @safetestset "PositionHarmonicRingPolymer" begin include("harmonic_ring_polymer.jl") end
+
+@safetestset "ElectronicDistributions" begin include("electronic.jl") end

@@ -1,7 +1,4 @@
 
-using RingPolymerArrays: NormalModeTransformation, transform_from_normal_modes!
-using LinearAlgebra: mul!
-
 struct PositionHarmonicRingPolymer{T}
     normal_mode_distribution::UnivariateArray{3,Normal{T}}
     transformation::NormalModeTransformation{T}

@@ -28,6 +28,7 @@ function Random.rand!(rng::AbstractRNG, a::AbstractMatrix, d::SamplerTrivial{<:U
 end
 Base.eltype(d::UnivariateFill) = Matrix{eltype(d.sampleable)}
 Base.size(d::UnivariateFill) = d.dims
+Base.getindex(d::UnivariateFill, _) = rand(d)
 
 """
     UnivariateArray{S<:Sampleable{Univariate}}
@@ -51,6 +52,7 @@ function Random.rand!(rng::AbstractRNG, a::AbstractMatrix, d::SamplerTrivial{<:U
 end
 Base.eltype(d::UnivariateArray) = Matrix{eltype(eltype(d.sampleable))}
 Base.size(d::UnivariateArray) = size(d.sampleable)
+Base.getindex(d::UnivariateArray, _) = rand(d)
 
 """
     FixedArray{S<:AbstractArray}
@@ -69,6 +71,7 @@ function Random.rand!(::AbstractRNG, a::AbstractArray, d::SamplerTrivial{<:Fixed
 end
 Base.eltype(d::FixedArray) = typeof(d.value)
 Base.size(d::FixedArray) = size(d.value)
+Base.getindex(d::FixedArray, _) = rand(d)
 
 """
     FixedValue{S<:Real}
@@ -88,6 +91,7 @@ function Random.rand!(::AbstractRNG, a::AbstractMatrix, d::SamplerTrivial{<:Fixe
 end
 Base.eltype(d::FixedValue) = Matrix{typeof(d.value)}
 Base.size(d::FixedValue) = d.dims
+Base.getindex(d::FixedValue, _) = rand(d)
 
 """
     ConfigurationVector{S<:AbstractVector}
@@ -106,6 +110,7 @@ function Random.rand!(rng::AbstractRNG, a::AbstractArray, d::SamplerTrivial{<:Co
 end
 Base.eltype(d::ConfigurationVector) = eltype(d.configurations)
 Base.size(d::ConfigurationVector) = size(first(d.configurations))
+Base.getindex(d::ConfigurationVector, i) = copy(d.configurations[i])
 
 """
     RingPolymerWrapper{S}
@@ -130,6 +135,15 @@ function Random.rand!(rng::AbstractRNG, a::RingPolymerArray, d::SamplerTrivial{<
         Random.rand!(rng, bead, d[].sampleable)
     end
     return a
+end
+Base.eltype(d::RingPolymerWrapper) = RingPolymerArray{eltype(eltype(d.sampleable))}
+Base.size(d::RingPolymerWrapper) = d.dims
+function Base.getindex(d::RingPolymerWrapper, i)
+    out = RingPolymerArray{eltype(eltype(d.sampleable))}(undef, d.dims; d.classical)
+    for bead in eachbead(out)
+        copy!(bead, d.sampleable[i])
+    end
+    return out
 end
 
 end

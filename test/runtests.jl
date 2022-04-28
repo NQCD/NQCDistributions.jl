@@ -9,6 +9,7 @@ using RingPolymerArrays: RingPolymerArray, eachbead
     d = UnivariateFill(Normal(), (3,2))
     @test eltype(d) == Matrix{Float64}
     @test rand(d) isa AbstractMatrix
+    @test d[1] isa AbstractMatrix
     out = zeros(3,2)
     rand!(out, d)
     @test all(out .!== 0.0)
@@ -18,6 +19,7 @@ end
     d = UnivariateArray([Normal() for i=1:3, j=1:2])
     @test eltype(d) == Matrix{Float64}
     @test rand(d) isa AbstractMatrix
+    @test d[1] isa AbstractMatrix
     out = zeros(3,2)
     rand!(out, d)
     @test all(out .!== 0.0)
@@ -27,6 +29,7 @@ end
     d = FixedArray([1 2; 3 4; 5 6])
     @test eltype(d) == Matrix{Int}
     @test rand(d) isa AbstractMatrix
+    @test d[1] isa AbstractMatrix
     out = zeros(3,2)
     rand!(out, d)
     @test out == [1.0 2.0; 3.0 4.0; 5.0 6.0]
@@ -35,6 +38,7 @@ end
     d = FixedArray(a)
     @test eltype(d) == Array{Float64,3}
     @test rand(d) isa AbstractArray{Float64,3}
+    @test d[1] isa AbstractArray{Float64,3}
     out = zeros(3,2,3)
     rand!(out, d)
     @test out == a
@@ -44,6 +48,7 @@ end
     d = FixedValue(1.0, (3,2))
     @test eltype(d) == Matrix{Float64}
     @test rand(d) isa AbstractMatrix
+    @test d[1] isa AbstractMatrix
     out = zeros(3,2)
     rand!(out, d)
     @test out == ones(3,2)
@@ -53,6 +58,7 @@ end
     d = ConfigurationVector([ones(3,2) for _=1:3])
     @test eltype(d) == Matrix{Float64}
     @test rand(d) isa AbstractMatrix
+    @test d[1] isa AbstractMatrix
     out = zeros(3,2)
     rand!(out, d)
     @test out == ones(3,2)
@@ -72,24 +78,32 @@ end
     @testset "UnivariateFill" begin
         dsingle = UnivariateFill(Normal(), (3,2))
         d = RingPolymerWrapper(dsingle, nbeads; classical)
+        @test eltype(d) <: RingPolymerArray
+        @test d[1] isa RingPolymerArray
         @test rand(d) isa RingPolymerArray
     end
 
     @testset "UnivariateArray" begin
         dsingle = UnivariateArray([Normal() for i=1:3, j=1:2])
         d = RingPolymerWrapper(dsingle, nbeads; classical)
+        @test eltype(d) <: RingPolymerArray
+        @test d[1] isa RingPolymerArray
         @test rand(d) isa RingPolymerArray
     end
 
     @testset "FixedArray" begin
         dsingle = UnivariateArray([Normal() for i=1:3, j=1:2])
         d = RingPolymerWrapper(dsingle, nbeads; classical)
+        @test eltype(d) <: RingPolymerArray
+        @test d[1] isa RingPolymerArray
         @test rand(d) isa RingPolymerArray
     end
 
     @testset "FixedValue" begin
         dsingle = FixedValue(1.0, (3,2))
         d = RingPolymerWrapper(dsingle, nbeads; classical)
+        @test eltype(d) <: RingPolymerArray
+        @test d[1] isa RingPolymerArray
         @test rand(d) isa RingPolymerArray
         @test rand(d) == ones(3,2,4)
     end
@@ -97,6 +111,8 @@ end
     @testset "ConfigurationVector" begin
         dsingle = ConfigurationVector([ones(3,2) for _=1:3])
         d = RingPolymerWrapper(dsingle, nbeads; classical)
+        @test eltype(d) <: RingPolymerArray
+        @test d[1] isa RingPolymerArray
         @test rand(d) isa RingPolymerArray
         @test rand(d) == ones(3,2,4)
     end

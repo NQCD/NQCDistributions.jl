@@ -31,26 +31,26 @@ Base.size(d::UnivariateFill) = d.dims
 Base.getindex(d::UnivariateFill, _) = rand(d)
 
 """
-    UnivariateArray{S<:Sampleable{Univariate}}
+    UnivariateArray{N,S<:Sampleable{Univariate}}
 
 Fill each degree of freedom from a different Univariate distribution.
 
 The size of the matrix of sampleables should match the system size.
 """
-struct UnivariateArray{S<:Sampleable{Univariate}}
-    sampleable::Matrix{S}
+struct UnivariateArray{N,S<:Sampleable{Univariate}}
+    sampleable::Array{S,N}
 end
 function Random.rand(rng::AbstractRNG, d::SamplerTrivial{<:UnivariateArray})
     out = similar(d[].sampleable, eltype(eltype(d[].sampleable)))
     return Random.rand!(rng, out, d)
 end
-function Random.rand!(rng::AbstractRNG, a::AbstractMatrix, d::SamplerTrivial{<:UnivariateArray})
+function Random.rand!(rng::AbstractRNG, a::AbstractArray, d::SamplerTrivial{<:UnivariateArray})
     for I in eachindex(a, d[].sampleable)
         a[I] = rand(rng, d[].sampleable[I])
     end
     return a
 end
-Base.eltype(d::UnivariateArray) = Matrix{eltype(eltype(d.sampleable))}
+Base.eltype(d::UnivariateArray{N}) where {N} = Array{eltype(eltype(d.sampleable)),N}
 Base.size(d::UnivariateArray) = size(d.sampleable)
 Base.getindex(d::UnivariateArray, _) = rand(d)
 
@@ -145,5 +145,16 @@ function Base.getindex(d::RingPolymerWrapper, i)
     end
     return out
 end
+
+include("nuclear/boltzmann.jl")
+export VelocityBoltzmann
+
+include("nuclear/harmonic_wigner.jl")
+export VelocityHarmonicWigner
+export MomentumHarmonicWigner
+export PositionHarmonicWigner
+
+include("nuclear/harmonic_ring_polymer.jl")
+export PositionHarmonicRingPolymer
 
 end

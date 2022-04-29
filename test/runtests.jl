@@ -54,8 +54,8 @@ end
     @test out == a
 end
 
-@testset "FixedValue" begin
-    d = FixedValue(1.0, (3,2))
+@testset "FixedFill" begin
+    d = FixedFill(1.0, (3,2))
     @test eltype(d) == Matrix{Float64}
     @test rand(d) isa AbstractMatrix
     @test d[1] isa AbstractMatrix
@@ -109,8 +109,8 @@ end
         @test rand(d) isa RingPolymerArray
     end
 
-    @testset "FixedValue" begin
-        dsingle = FixedValue(1.0, (3,2))
+    @testset "FixedFill" begin
+        dsingle = FixedFill(1.0, (3,2))
         d = RingPolymerWrapper(dsingle, nbeads; classical)
         @test eltype(d) <: RingPolymerArray
         @test d[1] isa RingPolymerArray
@@ -144,10 +144,10 @@ end
 @safetestset "ElectronicDistributions" begin include("electronic.jl") end
 
 @testset "DynamicalDistribution" begin
-    v = FixedValue(1.0, (3,2))
-    r = FixedValue(2.0, (2,2))
+    v = FixedFill(1.0, (3,2))
+    r = FixedFill(2.0, (2,2))
     @test_throws DimensionMismatch d = DynamicalDistribution(v, r)
-    r = FixedValue(2.0, (3,2))
+    r = FixedFill(2.0, (3,2))
     d = DynamicalDistribution(v, r)
     @test d[100] == ComponentVector{Float64}(
         v=[1.0 1.0; 1.0 1.0; 1.0 1.0],

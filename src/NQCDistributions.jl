@@ -13,7 +13,7 @@ include("basic_sampleables.jl")
 export UnivariateFill
 export UnivariateArray
 export FixedArray
-export FixedValue
+export FixedFill
 export ConfigurationVector
 export RingPolymerWrapper
 

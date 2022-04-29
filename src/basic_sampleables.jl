@@ -68,26 +68,26 @@ Base.firstindex(::FixedArray) = 1
 Base.lastindex(::FixedArray) = 1
 
 """
-    FixedValue{S<:Real}
+    FixedFill{S<:Real}
 
 Fill all degrees of freedom with the same value every time.
 """
-struct FixedValue{S<:Real}
+struct FixedFill{S<:Real}
     value::S
     dims::Dims{2}
 end
-function Random.rand(::AbstractRNG, d::SamplerTrivial{<:FixedValue})
+function Random.rand(::AbstractRNG, d::SamplerTrivial{<:FixedFill})
     return fill(d[].value, d[].dims)
 end
-function Random.rand!(::AbstractRNG, a::AbstractMatrix, d::SamplerTrivial{<:FixedValue})
+function Random.rand!(::AbstractRNG, a::AbstractMatrix, d::SamplerTrivial{<:FixedFill})
     fill!(a, d[].value)
     return a
 end
-Base.eltype(d::FixedValue) = Matrix{typeof(d.value)}
-Base.size(d::FixedValue) = d.dims
-Base.getindex(d::FixedValue, _) = rand(d)
-Base.firstindex(::FixedValue) = 1
-Base.lastindex(::FixedValue) = 1
+Base.eltype(d::FixedFill) = Matrix{typeof(d.value)}
+Base.size(d::FixedFill) = d.dims
+Base.getindex(d::FixedFill, _) = rand(d)
+Base.firstindex(::FixedFill) = 1
+Base.lastindex(::FixedFill) = 1
 
 """
     ConfigurationVector{S<:AbstractVector}

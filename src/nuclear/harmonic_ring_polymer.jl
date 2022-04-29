@@ -40,4 +40,4 @@ function Random.rand!(rng::AbstractRNG, a::AbstractArray, d::SamplerTrivial{<:Po
 end
 Base.eltype(::PositionHarmonicRingPolymer{T}) where {T} = RingPolymerArray{T}
 Base.size(d::PositionHarmonicRingPolymer) = size(d.normal_mode_distribution)
-Base.getindex(d::PositionHarmonicRingPolymer, _) = rand(d)
+isindexable(::PositionHarmonicRingPolymer) = false

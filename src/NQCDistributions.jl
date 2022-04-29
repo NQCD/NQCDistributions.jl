@@ -1,7 +1,7 @@
 module NQCDistributions
 
 using Distributions: Sampleable, Univariate
-using Random: Random, AbstractRNG, SamplerTrivial
+using Random: Random, AbstractRNG, SamplerTrivial, Xoshiro
 using RingPolymerArrays: RingPolymerArray, eachbead
 using UnitfulAtomic: austrip
 using Distributions: Normal
@@ -9,13 +9,7 @@ using RingPolymerArrays: NormalModeTransformation, transform_from_normal_modes!
 using LinearAlgebra: mul!, diagind
 using ComponentArrays: ComponentVector
 
-include("basic_sampleables.jl")
-export UnivariateFill
-export UnivariateArray
-export FixedArray
-export FixedFill
-export ConfigurationVector
-export RingPolymerWrapper
+include("sampleable_components.jl")
 
 include("nuclear/boltzmann.jl")
 export VelocityBoltzmann

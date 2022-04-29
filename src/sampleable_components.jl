@@ -1,7 +1,7 @@
 
 """
     UnivariateFill{S<:Sampleable{Univariate}}
-
+  
 Fill all degrees of freedom from single Univariate distribution.
 """
 struct UnivariateFill{S<:Sampleable{Univariate}}
@@ -16,9 +16,7 @@ function Random.rand!(rng::AbstractRNG, a::AbstractMatrix, d::SamplerTrivial{<:U
 end
 Base.eltype(d::UnivariateFill) = Matrix{eltype(d.sampleable)}
 Base.size(d::UnivariateFill) = d.dims
-Base.getindex(d::UnivariateFill, _) = rand(d)
-Base.firstindex(::UnivariateFill) = 1
-Base.lastindex(::UnivariateFill) = 1
+isindexable(::UnivariateFill) = false
 
 """
     UnivariateArray{N,S<:Sampleable{Univariate}}
@@ -42,9 +40,7 @@ function Random.rand!(rng::AbstractRNG, a::AbstractArray, d::SamplerTrivial{<:Un
 end
 Base.eltype(d::UnivariateArray{N}) where {N} = Array{eltype(eltype(d.sampleable)),N}
 Base.size(d::UnivariateArray) = size(d.sampleable)
-Base.getindex(d::UnivariateArray, _) = rand(d)
-Base.firstindex(::UnivariateArray) = 1
-Base.lastindex(::UnivariateArray) = 1
+isindexable(::UnivariateArray) = false
 
 """
     FixedArray{S<:AbstractArray}
@@ -63,9 +59,7 @@ function Random.rand!(::AbstractRNG, a::AbstractArray, d::SamplerTrivial{<:Fixed
 end
 Base.eltype(d::FixedArray) = typeof(d.value)
 Base.size(d::FixedArray) = size(d.value)
-Base.getindex(d::FixedArray, _) = rand(d)
-Base.firstindex(::FixedArray) = 1
-Base.lastindex(::FixedArray) = 1
+isindexable(::FixedArray) = false
 
 """
     FixedFill{S<:Real}
@@ -85,9 +79,7 @@ function Random.rand!(::AbstractRNG, a::AbstractMatrix, d::SamplerTrivial{<:Fixe
 end
 Base.eltype(d::FixedFill) = Matrix{typeof(d.value)}
 Base.size(d::FixedFill) = d.dims
-Base.getindex(d::FixedFill, _) = rand(d)
-Base.firstindex(::FixedFill) = 1
-Base.lastindex(::FixedFill) = 1
+isindexable(::FixedFill) = false
 
 """
     ConfigurationVector{S<:AbstractVector}
@@ -109,6 +101,7 @@ Base.size(d::ConfigurationVector) = size(first(d.configurations))
 Base.getindex(d::ConfigurationVector, i) = copy(d.configurations[i])
 Base.firstindex(d::ConfigurationVector) = firstindex(d.configurations)
 Base.lastindex(d::ConfigurationVector) = lastindex(d.configurations)
+isindexable(::ConfigurationVector) = true
 
 """
     RingPolymerWrapper{S}
@@ -145,3 +138,50 @@ function Base.getindex(d::RingPolymerWrapper, i)
 end
 Base.firstindex(d::RingPolymerWrapper) = firstindex(d.sampleable)
 Base.lastindex(d::RingPolymerWrapper) = lastindex(d.sampleable)
+isindexable(d::RingPolymerWrapper) = isindexable(d.sampleable)
+
+"""
+    SampleableComponent(sampleable, dims)
+
+Converts a general `sampleable` that provides configurations into one of the component types defined below. 
+`dims` should be the size of the desired samples and must be consistent with the provided sampleable.
+"""
+function SampleableComponent end
+
+function SampleableComponent(sampleable::Sampleable{Univariate}, dims::Dims{2})
+    return UnivariateFill(sampleable, dims)
+end
+function SampleableComponent(sampleable::Sampleable{Univariate}, dims::Dims{3}; classical=Int[])
+    return RingPolymerWrapper(UnivariateFill(sampleable, (dims[1], dims[2])), dims[3]; classical)
+end
+
+function SampleableComponent(sampleable::AbstractArray{<:Sampleable{Univariate}}, dims::Dims{2})
+    size(sampleable) == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    return UnivariateArray(sampleable)
+end
+function SampleableComponent(sampleable::AbstractArray{<:Sampleable{Univariate}}, dims::Dims{3}; classical=Int[])
+    size(sampleable) == (dims[1], dims[2]) || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    return RingPolymerWrapper(UnivariateArray(sampleable), dims[3]; classical)
+end
+
+function SampleableComponent(sampleable::AbstractArray{<:Real}, dims::Dims)
+    size(sampleable) == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    return FixedArray(sampleable)
+end
+
+function SampleableComponent(sampleable::Real, dims::Dims{2})
+    return FixedFill(sampleable, dims)
+end
+function SampleableComponent(sampleable::Real, dims::Dims{3}; classical=Int[])
+    return RingPolymerWrapper(FixedFill(sampleable, (dims[1], dims[2])), dims[3]; classical)
+end
+
+function SampleableComponent(sampleable::AbstractVector{<:AbstractArray}, dims::Dims)
+    size(sampleable[1]) == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    return ConfigurationVector(sampleable)
+end
+
+function SampleableComponent(sampleable::RingPolymerWrapper, dims::Dims{3})
+    size(sampleable) == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    return sampleable
+end

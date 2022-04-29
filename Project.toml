@@ -14,6 +14,11 @@ UnitfulAtomic = "a7773ee8-282e-5fa2-be4e-bd808c38a91a"
 
 [compat]
 julia = "1"
+ComponentArrays = "0.11"
+Distributions = "0.25"
+RingPolymerArrays = "0.1"
+Unitful = "1"
+UnitfulAtomic = "1"
 
 [extras]
 NQCDynamics = "36248dfb-79eb-4f4d-ab9c-e29ea5f33e14"

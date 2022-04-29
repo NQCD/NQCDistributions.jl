@@ -31,4 +31,6 @@ export FermiDiracState
 include("dynamical_distribution.jl")
 export DynamicalDistribution
 
+include("product_distribution.jl")
+
 end

@@ -38,7 +38,7 @@ end
     out = zeros(3,2,4)
     rand!(out, d)
     @test all(out .!== 0.0)
-    @test SampleableComponent([Normal() for i=1:3, j=1:2], (3,2,4)) isa RingPolymerWrapper
+    @test SampleableComponent([Normal() for i=1:3, j=1:2], (3,2,4), Int[]) isa RingPolymerWrapper
 end
 
 @testset "FixedArray" begin
@@ -70,7 +70,7 @@ end
     rand!(out, d)
     @test out == ones(3,2)
     @test SampleableComponent(1.0, (3,2)) isa FixedFill
-    @test SampleableComponent(1.0, (3,2,3)) isa RingPolymerWrapper
+    @test SampleableComponent(1.0, (3,2,3), Int[]) isa RingPolymerWrapper
 end
 
 @testset "ConfigurationVector" begin
@@ -100,28 +100,28 @@ end
 
     @testset "UnivariateFill" begin
         dsingle = UnivariateFill(Normal(), (3,2))
-        d = RingPolymerWrapper(dsingle, nbeads; classical)
+        d = RingPolymerWrapper(dsingle, nbeads, classical)
         @test eltype(d) <: RingPolymerArray
         @test rand(d) isa RingPolymerArray
     end
 
     @testset "UnivariateArray" begin
         dsingle = UnivariateArray([Normal() for i=1:3, j=1:2])
-        d = RingPolymerWrapper(dsingle, nbeads; classical)
+        d = RingPolymerWrapper(dsingle, nbeads, classical)
         @test eltype(d) <: RingPolymerArray
         @test rand(d) isa RingPolymerArray
     end
 
     @testset "FixedArray" begin
         dsingle = UnivariateArray([Normal() for i=1:3, j=1:2])
-        d = RingPolymerWrapper(dsingle, nbeads; classical)
+        d = RingPolymerWrapper(dsingle, nbeads, classical)
         @test eltype(d) <: RingPolymerArray
         @test rand(d) isa RingPolymerArray
     end
 
     @testset "FixedFill" begin
         dsingle = FixedFill(1.0, (3,2))
-        d = RingPolymerWrapper(dsingle, nbeads; classical)
+        d = RingPolymerWrapper(dsingle, nbeads, classical)
         @test eltype(d) <: RingPolymerArray
         @test rand(d) isa RingPolymerArray
         @test rand(d) == ones(3,2,4)
@@ -129,7 +129,7 @@ end
 
     @testset "ConfigurationVector" begin
         dsingle = ConfigurationVector([ones(3,2) for _=1:3])
-        d = RingPolymerWrapper(dsingle, nbeads; classical)
+        d = RingPolymerWrapper(dsingle, nbeads, classical)
         @test eltype(d) <: RingPolymerArray
         @test d[1] isa RingPolymerArray
         @test rand(d) isa RingPolymerArray

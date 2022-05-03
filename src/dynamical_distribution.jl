@@ -3,20 +3,27 @@ struct DynamicalDistribution{V,R}
     velocity::V
     position::R
     rng::Xoshiro
-    function DynamicalDistribution(velocity, position)
-        size(velocity) == size(position) || throw(
-            DimensionMismatch(
-                "`velocity` and `position` sample size does not match: \
-                $(size(velocity)) != $(size(position))"
-            )
-        )
-        return new{typeof(velocity),typeof(position)}(velocity, position, Xoshiro())
-    end
 end
 
-function DynamicalDistribution(velocity, position, dims)
+function DynamicalDistribution(velocity::SampleableComponent, position::SampleableComponent)
+    size(velocity) == size(position) || throw(
+        DimensionMismatch(
+            "`velocity` and `position` sample size does not match: \
+            $(size(velocity)) != $(size(position))"
+        )
+    )
+    return DynamicalDistribution(velocity, position, Xoshiro())
+end
+
+function DynamicalDistribution(velocity, position, dims::Dims{2})
     v = SampleableComponent(velocity, dims)
     r = SampleableComponent(position, dims)
+    return DynamicalDistribution(v, r)
+end
+
+function DynamicalDistribution(velocity, position, dims::Dims{3}; classical=Int[])
+    v = SampleableComponent(velocity, dims, classical)
+    r = SampleableComponent(position, dims, classical)
     return DynamicalDistribution(v, r)
 end
 

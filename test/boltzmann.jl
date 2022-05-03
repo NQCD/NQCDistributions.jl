@@ -11,6 +11,10 @@ using Random: rand!
     rand!(out, d)
     @test all(out .!== 0.0)
 
+    @test_throws DimensionMismatch DynamicalDistribution(d, d, (3,3))
     dist = DynamicalDistribution(d, d, (3,2))
+    rand(dist)
+    @test_throws DimensionMismatch DynamicalDistribution(d, d, (3,3,4))
+    dist = DynamicalDistribution(d, d, (3,2,4))
     rand(dist)
 end

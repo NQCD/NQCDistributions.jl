@@ -1,4 +1,24 @@
 
+"""
+    DynamicalDistribution(velocity, position, dims)
+
+Sampleable struct containing distributions for velocity and position.
+`dims` determines the size of each sample and should match the size of the system: (ndofs, natoms).
+
+# Example
+
+```jldoctest; setup = :(using Random; Random.seed!(1))
+julia> using NQCDistributions: DynamicalDistribution;
+julia> using Distributions: Normal;
+julia> d = DynamicalDistribution([[1.0;;], [2.0;;], [3.0;;]], Normal(), (1, 1));
+
+julia> rand(d)
+    ComponentVector{Float64}(v = [1.0;;], r = [3.0;;])
+
+julia> d[2]
+    ComponentVector{Float64}(v = [1.0;;], r = [3.0;;])
+```
+"""
 struct DynamicalDistribution{V,R}
     velocity::V
     position::R

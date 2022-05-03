@@ -1,10 +1,12 @@
 
+abstract type SampleableComponent end
+
 """
     UnivariateFill{S<:Sampleable{Univariate}}
   
 Fill all degrees of freedom from single Univariate distribution.
 """
-struct UnivariateFill{S<:Sampleable{Univariate}}
+struct UnivariateFill{S<:Sampleable{Univariate}} <: SampleableComponent
     sampleable::S
     dims::Dims{2}
 end
@@ -25,7 +27,7 @@ Fill each degree of freedom from a different Univariate distribution.
 
 The size of the matrix of sampleables should match the system size.
 """
-struct UnivariateArray{N,S<:Sampleable{Univariate}}
+struct UnivariateArray{N,S<:Sampleable{Univariate}} <: SampleableComponent
     sampleable::Array{S,N}
 end
 function Random.rand(rng::AbstractRNG, d::SamplerTrivial{<:UnivariateArray})
@@ -47,7 +49,7 @@ isindexable(::UnivariateArray) = false
 
 Return the same configuration every time.
 """
-struct FixedArray{S<:AbstractArray}
+struct FixedArray{S<:AbstractArray} <: SampleableComponent
     value::S
 end
 function Random.rand(::AbstractRNG, d::SamplerTrivial{<:FixedArray})
@@ -66,7 +68,7 @@ isindexable(::FixedArray) = false
 
 Fill all degrees of freedom with the same value every time.
 """
-struct FixedFill{S<:Real}
+struct FixedFill{S<:Real} <: SampleableComponent
     value::S
     dims::Dims{2}
 end
@@ -86,7 +88,7 @@ isindexable(::FixedFill) = false
 
 Sample from a provided vector of configurations.
 """
-struct ConfigurationVector{S<:AbstractVector}
+struct ConfigurationVector{S<:AbstractVector} <: SampleableComponent
     configurations::S
 end
 function Random.rand(rng::AbstractRNG, d::SamplerTrivial{<:ConfigurationVector})
@@ -108,7 +110,7 @@ isindexable(::ConfigurationVector) = true
 
 Wrap other distributions to convert them to ring polymer distributions.
 """
-struct RingPolymerWrapper{S}
+struct RingPolymerWrapper{S} <: SampleableComponent
     sampleable::S
     dims::Dims{3}
     classical::Vector{Int}
@@ -147,6 +149,8 @@ Converts a general `sampleable` that provides configurations into one of the com
 `dims` should be the size of the desired samples and must be consistent with the provided sampleable.
 """
 function SampleableComponent end
+
+SampleableComponent(sampleable::SampleableComponent, ::Dims) = sampleable
 
 function SampleableComponent(sampleable::Sampleable{Univariate}, dims::Dims{2})
     return UnivariateFill(sampleable, dims)

@@ -10,4 +10,7 @@ using Random: rand!
     out = zeros(3,2)
     rand!(out, d)
     @test all(out .!== 0.0)
+
+    dist = DynamicalDistribution(d, d, (3,2))
+    rand(dist)
 end

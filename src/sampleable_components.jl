@@ -115,7 +115,7 @@ struct RingPolymerWrapper{S} <: SampleableComponent
     dims::Dims{3}
     classical::Vector{Int}
 end
-function RingPolymerWrapper(sampleable, nbeads; classical=Int[])
+function RingPolymerWrapper(sampleable, nbeads, classical)
     return RingPolymerWrapper(sampleable, (size(sampleable)..., nbeads), classical)
 end
 function Random.rand(rng::AbstractRNG, d::SamplerTrivial{<:RingPolymerWrapper})
@@ -150,42 +150,52 @@ Converts a general `sampleable` that provides configurations into one of the com
 """
 function SampleableComponent end
 
-SampleableComponent(sampleable::SampleableComponent, ::Dims) = sampleable
+function SampleableComponent(sampleable::SampleableComponent, dims::Dims{3}, classical)
+    checkdims(size(sampleable), (dims[1], dims[2]))
+    return RingPolymerWrapper(sampleable, dims[3], classical)
+end
+
+function SampleableComponent(sampleable::SampleableComponent, dims::Dims{2})
+    checkdims(size(sampleable), dims)
+    return sampleable
+end
 
 function SampleableComponent(sampleable::Sampleable{Univariate}, dims::Dims{2})
     return UnivariateFill(sampleable, dims)
 end
-function SampleableComponent(sampleable::Sampleable{Univariate}, dims::Dims{3}; classical=Int[])
-    return RingPolymerWrapper(UnivariateFill(sampleable, (dims[1], dims[2])), dims[3]; classical)
+function SampleableComponent(sampleable::Sampleable{Univariate}, dims::Dims{3}, classical)
+    return RingPolymerWrapper(UnivariateFill(sampleable, (dims[1], dims[2])), dims[3], classical)
 end
 
 function SampleableComponent(sampleable::AbstractArray{<:Sampleable{Univariate}}, dims::Dims{2})
-    size(sampleable) == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    checkdims(size(sampleable), dims)
     return UnivariateArray(sampleable)
 end
-function SampleableComponent(sampleable::AbstractArray{<:Sampleable{Univariate}}, dims::Dims{3}; classical=Int[])
-    size(sampleable) == (dims[1], dims[2]) || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
-    return RingPolymerWrapper(UnivariateArray(sampleable), dims[3]; classical)
+function SampleableComponent(sampleable::AbstractArray{<:Sampleable{Univariate}}, dims::Dims{3}, classical)
+    checkdims(size(sampleable), (dims[1], dims[2]))
+    return RingPolymerWrapper(UnivariateArray(sampleable), dims[3], classical)
 end
 
 function SampleableComponent(sampleable::AbstractArray{<:Real}, dims::Dims)
-    size(sampleable) == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    checkdims(size(sampleable), dims)
     return FixedArray(sampleable)
 end
 
 function SampleableComponent(sampleable::Real, dims::Dims{2})
     return FixedFill(sampleable, dims)
 end
-function SampleableComponent(sampleable::Real, dims::Dims{3}; classical=Int[])
-    return RingPolymerWrapper(FixedFill(sampleable, (dims[1], dims[2])), dims[3]; classical)
+function SampleableComponent(sampleable::Real, dims::Dims{3}, classical)
+    return RingPolymerWrapper(FixedFill(sampleable, (dims[1], dims[2])), dims[3], classical)
 end
 
 function SampleableComponent(sampleable::AbstractVector{<:AbstractArray}, dims::Dims)
-    size(sampleable[1]) == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    checkdims(size(sampleable[1]), dims)
     return ConfigurationVector(sampleable)
 end
 
 function SampleableComponent(sampleable::RingPolymerWrapper, dims::Dims{3})
-    size(sampleable) == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+    checkdims(size(sampleable), dims)
     return sampleable
 end
+
+checkdims(sz, dims) = sz == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))

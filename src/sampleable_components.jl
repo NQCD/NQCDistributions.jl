@@ -192,6 +192,10 @@ function SampleableComponent(sampleable::AbstractVector{<:AbstractArray}, dims::
     checkdims(size(sampleable[1]), dims)
     return ConfigurationVector(sampleable)
 end
+function SampleableComponent(sampleable::AbstractVector{<:AbstractArray}, dims::Dims{3}, classical)
+    checkdims(size(sampleable[1]), dims)
+    return ConfigurationVector(sampleable)
+end
 
 function SampleableComponent(sampleable::RingPolymerWrapper, dims::Dims{3})
     checkdims(size(sampleable), dims)

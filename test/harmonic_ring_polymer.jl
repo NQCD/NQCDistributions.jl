@@ -30,3 +30,9 @@ end
     s = PositionHarmonicRingPolymer{Float64}(ω, β, m, (1,1, n_beads); centre)
     @test mean(rand(s)) ≈ 57 atol=0.5
 end
+
+@testset "DynamicalDistribution" begin
+    d = DynamicalDistribution(s, s, (1, 1, n_beads))
+    rand(d)
+    d[1]
+end

@@ -197,9 +197,9 @@ function SampleableComponent(sampleable::AbstractVector{<:AbstractArray}, dims::
     return ConfigurationVector(sampleable)
 end
 
-function SampleableComponent(sampleable::RingPolymerWrapper, dims::Dims{3})
+function SampleableComponent(sampleable::RingPolymerWrapper, dims::Dims{3}, classical)
     checkdims(size(sampleable), dims)
     return sampleable
 end
 
-checkdims(sz, dims) = sz == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims."))
+checkdims(sz, dims) = sz == dims || throw(DimensionMismatch("Size of sampleable does not match provided dims: $sz != $dims."))

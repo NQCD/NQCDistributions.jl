@@ -1,5 +1,5 @@
 
-struct PositionHarmonicRingPolymer{T}
+struct PositionHarmonicRingPolymer{T} <: SampleableComponent
     normal_mode_distribution::UnivariateArray{3,Normal{T}}
     transformation::NormalModeTransformation{T}
     classical::Vector{Int}
@@ -41,3 +41,9 @@ end
 Base.eltype(::PositionHarmonicRingPolymer{T}) where {T} = RingPolymerArray{T}
 Base.size(d::PositionHarmonicRingPolymer) = size(d.normal_mode_distribution)
 isindexable(::PositionHarmonicRingPolymer) = false
+
+function SampleableComponent(sampleable::PositionHarmonicRingPolymer, dims::Dims{3}, classical)
+    checkdims(size(sampleable), dims)
+    sampleable.classical == classical || throw(error("`classical` vectors do not match."))
+    return sampleable
+end

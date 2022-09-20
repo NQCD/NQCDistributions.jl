@@ -46,16 +46,19 @@ function density_matrix(d::MixedState)
 end
 
 """
-    FermiDiracState{T,S} <: ElectronicDistribution{S}
+    FermiDiracState{S,T,A} <: ElectronicDistribution{S}
 
 Electronic distribution for Fermions following Fermi-Dirac distribution.
 """
-struct FermiDiracState{T,S} <: ElectronicDistribution{S}
+struct FermiDiracState{S,T,A} <: ElectronicDistribution{S}
     fermi_level::T
     β::T
     statetype::S
+    available_states::A
 end
-FermiDiracState(fermi_level, temperature) = FermiDiracState(austrip(fermi_level), 1/austrip(temperature), Adiabatic())
+function FermiDiracState(fermi_level, temperature; statetype=Adiabatic(), available_states=Colon())
+    return FermiDiracState(austrip(fermi_level), 1/austrip(temperature), statetype, available_states)
+end
 fermi(ϵ, μ, β) = 1 / (1 + exp(β*(ϵ - μ)))
 
 function density_matrix(d::FermiDiracState, eigenvalues)

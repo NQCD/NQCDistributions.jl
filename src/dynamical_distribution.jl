@@ -9,14 +9,14 @@ Sampleable struct containing distributions for velocity and position.
 
 ```jldoctest; setup = :(using Random; Random.seed!(1))
 julia> using NQCDistributions: DynamicalDistribution;
-julia> using Distributions: Normal;
-julia> d = DynamicalDistribution([[1.0;;], [2.0;;], [3.0;;]], Normal(), (1, 1));
+
+julia> d = DynamicalDistribution([[1.0;;], [2.0;;], [3.0;;]], 0.1, (1, 1));
 
 julia> rand(d)
-    ComponentVector{Float64}(v = [1.0;;], r = [3.0;;])
+ComponentVector{Float64}(v = [1.0;;], r = [0.1;;])
 
 julia> d[2]
-    ComponentVector{Float64}(v = [1.0;;], r = [3.0;;])
+ComponentVector{Float64}(v = [2.0;;], r = [0.1;;])
 ```
 """
 struct DynamicalDistribution{V,R}

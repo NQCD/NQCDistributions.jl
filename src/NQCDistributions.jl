@@ -22,6 +22,9 @@ export PositionHarmonicWigner
 include("nuclear/harmonic_ring_polymer.jl")
 export PositionHarmonicRingPolymer
 
+include("nuclear/free_ring_polymer.jl")
+export PositionFreeRingPolymer
+
 include("electronic/electronic.jl")
 export Adiabatic, Diabatic
 export PureState

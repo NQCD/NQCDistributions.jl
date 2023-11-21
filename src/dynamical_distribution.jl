@@ -19,10 +19,28 @@ julia> d[2]
 ComponentVector{Float64}(v = [2.0;;], r = [0.1;;])
 ```
 """
+
+"""
+Comment from Xuexun on Tue 2021-08-03 11:00:00
+
+Code uses the multiple dispatch in Julia by defining a certain function multiple times
+    
+    So, it depends on your input to automatically choose the appropriate method 
+
+    And three dispatches all return the same type DynamicalDistribution
+
+    Therefore, we should have following:
+
+        julia> dist = DynamicalDistribution(10.0, position, dims)
+
+        julia> dist.velocity
+        10.0
+"""
+
 struct DynamicalDistribution{V,R}
     velocity::V
     position::R
-    rng::Xoshiro
+    rng::Xoshiro # Random seed generator
 end
 
 function DynamicalDistribution(velocity::SampleableComponent, position::SampleableComponent)

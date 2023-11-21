@@ -31,10 +31,10 @@ Code uses the multiple dispatch in Julia by defining a certain function multiple
 
     Therefore, we should have following:
 
-        julia> dist = DynamicalDistribution(10.0, position, dims)
+        julia> dist = DynamicalDistribution(10.0, position, (1,1))
 
         julia> dist.velocity
-        10.0
+        NQCDistributions.FixedFill{Float64}(10.0, (1, 1))
 """
 
 struct DynamicalDistribution{V,R}

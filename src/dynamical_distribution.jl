@@ -21,8 +21,6 @@ ComponentVector{Float64}(v = [2.0;;], r = [0.1;;])
 """
 
 """
-Comment from Xuexun on Tue 2021-08-03 11:00:00
-
 Code uses the multiple dispatch in Julia by defining a certain function multiple times
     
     So, it depends on your input to automatically choose the appropriate method 

@@ -1,3 +1,8 @@
+"""
+Subtypes of SampleableComponent can be checked by
+ttree(NQCDistributions.SampleableComponent)
+"""
+
 
 abstract type SampleableComponent end
 

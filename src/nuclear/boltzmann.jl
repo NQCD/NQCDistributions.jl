@@ -1,6 +1,6 @@
 
 """
-    VelocityBoltzmann(temperature, masses::AbstractVector, dims::Dims{2};  centre = nothing)
+    VelocityBoltzmann(temperature, masses::AbstractVector, dims::Dims{2};  center::AbstractVector = zeros(dims))
 
 Generate a Boltzmann distribution of velocities for each degree of freedom.
 
@@ -9,9 +9,16 @@ Generate a Boltzmann distribution of velocities for each degree of freedom.
 * `temperature` - Atomic units or Unitful
 * `masses` - Vector of masses for each atom
 * `dims` - (ndofs, natoms). `natoms` must equal `length(masses)`
-* `centre` - Vector of dimension ndofs that provides centre of mass velocity offset
+* `center` - Vector of dimension ndofs that provides centre of mass velocity offset
 """
-function VelocityBoltzmann(temperature, masses::AbstractVector, dims::Dims{2};  centre = zeros(dims))
-    return UnivariateArray([VelocityBoltzmann(temperature, masses[I[2]]; centre = centre[I]) for I in CartesianIndices(dims)])
+
+function VelocityBoltzmann(temperature, masses::AbstractVector, dims::Dims{2};  center::Array{Float64} = zeros(dims))
+    return UnivariateArray([VelocityBoltzmann(temperature, masses[I[2]]; center = center[I]) for I in CartesianIndices(dims)])
 end
-VelocityBoltzmann(temperature, mass; centre = 0) = Normal(centre, sqrt(austrip(temperature)/mass))
+    
+"""
+    VelocityBoltzmann(temperature, mass; center = 0)
+"""
+function VelocityBoltzmann(temperature::Float64, mass::Float64; center::Float64 = 0)
+    return Normal(center, sqrt(austrip(temperature)/mass))
+end

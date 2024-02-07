@@ -1,8 +1,3 @@
-"""
-Subtypes of SampleableComponent can be checked by
-ttree(NQCDistributions.SampleableComponent)
-"""
-
 
 abstract type SampleableComponent end
 
@@ -36,7 +31,7 @@ struct UnivariateArray{N,S<:Sampleable{Univariate}} <: SampleableComponent
     sampleable::Array{S,N}
 end
 function Random.rand(rng::AbstractRNG, d::SamplerTrivial{<:UnivariateArray})
-    out = similar(d[].sampleable, eltype(eltype(d[].sampleable)))
+    out = similar(d[].sampleable, Union{unique(eltype.(d[].sampleable))...})
     return Random.rand!(rng, out, d)
 end
 function Random.rand!(rng::AbstractRNG, a::AbstractArray, d::SamplerTrivial{<:UnivariateArray})

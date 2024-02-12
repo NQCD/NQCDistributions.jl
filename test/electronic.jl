@@ -3,13 +3,13 @@ using NQCDistributions
 using Unitful, UnitfulAtomic
 
 @testset "PureState" begin
-    d = PureState(1)
-    NQCDistributions.density_matrix(d, 2)
+    d = PureState(2)
+    @test NQCDistributions.density_matrix(d, 2) == [0 0; 0 1]
 end
 
 @testset "MixedState" begin
     d = MixedState([0.3, 0.4])
-    NQCDistributions.density_matrix(d)
+    @test NQCDistributions.density_matrix(d) == [0.3 0; 0 0.4]
 end
 
 @testset "FermiDiracState" begin

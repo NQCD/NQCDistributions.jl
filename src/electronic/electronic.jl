@@ -24,7 +24,7 @@ PureState(state) = PureState(state, Diabatic())
 
 function density_matrix(d::PureState, nstates)
     density = zeros(nstates, nstates)
-    density[d.state] = 1
+    density[d.state, d.state] = 1
     return density
 end
 

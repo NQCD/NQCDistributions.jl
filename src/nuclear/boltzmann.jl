@@ -19,6 +19,6 @@ end
 """
     VelocityBoltzmann(temperature, mass; center = 0)
 """
-function VelocityBoltzmann(temperature::Float64, mass::Float64; center::Float64 = 0)
+function VelocityBoltzmann(temperature::Number, mass::Float64; center::Float64 = 0)
     return Normal(center, sqrt(austrip(temperature)/mass))
 end

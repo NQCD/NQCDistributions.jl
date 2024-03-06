@@ -24,7 +24,7 @@ PureState(state) = PureState(state, Diabatic())
 
 function density_matrix(d::PureState, nstates)
     density = zeros(nstates, nstates)
-    density[d.state] = 1
+    density[d.state, d.state] = 1
     return density
 end
 
@@ -41,7 +41,7 @@ MixedState(state) = MixedState(state, Diabatic())
 
 function density_matrix(d::MixedState)
     density = zeros(length(d.populations), length(d.populations))
-    copy!(density[diagind(density)], d.populations)
+    density[diagind(density)] .= d.populations
     return density
 end
 

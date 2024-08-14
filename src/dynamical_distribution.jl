@@ -1,3 +1,17 @@
+"""
+Code uses the multiple dispatch in Julia by defining a certain function multiple times
+
+    So, it depends on your input to automatically choose the appropriate method
+
+    And three dispatches all return the same type DynamicalDistribution
+
+    Therefore, we should have following:
+
+        julia> dist = DynamicalDistribution(10.0, position, (1,1))
+
+        julia> dist.velocity
+        NQCDistributions.FixedFill{Float64}(10.0, (1, 1))
+"""
 
 """
     DynamicalDistribution(velocity, position, dims)
@@ -19,22 +33,6 @@ julia> d[2]
 ComponentVector{Float64}(v = [2.0;;], r = [0.1;;])
 ```
 """
-
-"""
-Code uses the multiple dispatch in Julia by defining a certain function multiple times
-    
-    So, it depends on your input to automatically choose the appropriate method 
-
-    And three dispatches all return the same type DynamicalDistribution
-
-    Therefore, we should have following:
-
-        julia> dist = DynamicalDistribution(10.0, position, (1,1))
-
-        julia> dist.velocity
-        NQCDistributions.FixedFill{Float64}(10.0, (1, 1))
-"""
-
 struct DynamicalDistribution{V,R}
     velocity::V
     position::R
@@ -117,5 +115,5 @@ end
 Base.length(d::DynamicalDistribution) = lastindex(d)
 
 function Base.iterate(d::DynamicalDistribution, state=1)
-    return state > lastindex(d) ? nothing : (d[state], state+1)
+    return state > lastindex(d) ? nothing : (d[state], state + 1)
 end

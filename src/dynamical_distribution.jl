@@ -83,7 +83,7 @@ function Random.rand(rng::AbstractRNG, d::SamplerTrivial{<:DynamicalDistribution
     else
         i = rand(rng, UInt)
         Random.seed!(d[].rng, i)
-        return ComponentVector(v=freeze(rand(d[].rng, d[].velocity), d.frozen_atoms), r=rand(d[].rng, d[].position))
+        return ComponentVector(v=freeze(rand(d[].rng, d[].velocity), d.self.frozen_atoms), r=rand(d[].rng, d[].position))
     end
 
 end

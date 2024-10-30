@@ -66,3 +66,20 @@ function density_matrix(d::FermiDiracState, eigenvalues)
     density[diagind(density)] .= fermi.(eigenvalues, d.fermi_level, d.β)
     return density
 end
+
+# ------------------------------- New Electronic State Struct/Type ------------------------------- #
+"""
+     NonEqState{S,T,A} <: ElectronicDistribution{S}
+
+Electronic distribution for Fermions following a supplied non-equilibrium distribution.
+"""
+struct NonEqState{S,T,A} <: ElectronicDistribution{S}
+    DistFilePath::T
+    DOSFilePath::T
+    statetype::S # usually the `adiabatic()` or `diabatic()`` labels
+    available_states::A # need this, in general will default to `Colon()` as with above.
+end
+function NonEqState(DistFilePath, DOSFilePath; statetype=Adiabatic(), available_states=Colon())
+    return NonEqState(DistFilePath, DOSFilePath, statetype, available_states)
+end
+# ------------------------------------------------------------------------------------------------ #

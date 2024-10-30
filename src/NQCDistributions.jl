@@ -30,6 +30,7 @@ export Adiabatic, Diabatic
 export PureState
 export MixedState
 export FermiDiracState
+export NonEqState # added to export new electronic state struct
 
 include("dynamical_distribution.jl")
 export DynamicalDistribution

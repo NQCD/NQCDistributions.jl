@@ -78,7 +78,7 @@ struct NonEqState{S,T,A} <: ElectronicDistribution{S}
     statetype::S # usually the `adiabatic()` or `diabatic()`` labels
     available_states::A # need this, in general will default to `Colon()` as with above.
 end
-function NonEqState(state_vector, statetype=Adiabatic(), available_states=Colon())
-    return NonEqState(state_vector, statetype, available_states)
+function NonEqState(occupation_vector, statetype=Adiabatic(), available_states=Colon())
+    return NonEqState(occupation_vector, statetype, available_states)
 end
 # ------------------------------------------------------------------------------------------------ #

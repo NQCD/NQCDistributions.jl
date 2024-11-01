@@ -69,17 +69,16 @@ end
 
 # ------------------------------- New Electronic State Struct/Type ------------------------------- #
 """
-     NonEqState{S,T,A} <: ElectronicDistribution{S}
+    NonEqState{S,T,A} <: ElectronicDistribution{S}
 
 Electronic distribution for Fermions following a supplied non-equilibrium distribution.
 """
 struct NonEqState{S,T,A} <: ElectronicDistribution{S}
-    DistFilePath::T
-    DOSFilePath::T
+    occupation_vector::T # binary_vector from non-equilibrium distribution
     statetype::S # usually the `adiabatic()` or `diabatic()`` labels
     available_states::A # need this, in general will default to `Colon()` as with above.
 end
-function NonEqState(DistFilePath, DOSFilePath; statetype=Adiabatic(), available_states=Colon())
-    return NonEqState(DistFilePath, DOSFilePath, statetype, available_states)
+function NonEqState(state_vector, statetype=Adiabatic(), available_states=Colon())
+    return NonEqState(state_vector, statetype, available_states)
 end
 # ------------------------------------------------------------------------------------------------ #

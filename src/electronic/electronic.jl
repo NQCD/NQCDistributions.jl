@@ -76,10 +76,11 @@ Electronic distribution for Fermions following a supplied non-equilibrium distri
 struct NonEqState{S,T,A} <: ElectronicDistribution{S}
     distribution::T # non-equilibrium distribution mapped onto model's energy grid
     dos::T # density of states distribution mapped onto the model's energy grid
+    energygrid::T
     statetype::S # usually the `adiabatic()` or `diabatic()`` labels
     available_states::A # need this, in general will default to `Colon()` as with above.
 end
-function NonEqState(distribution::Vector{<:AbstractFloat}, dos::Vector{<:AbstractFloat}; statetype=Adiabatic(), available_states=Colon())
-    return NonEqState(distribution, dos, statetype, available_states)
+function NonEqState(distribution::Vector{<:AbstractFloat}, dos::Vector{<:AbstractFloat}, energygrid::Vector{<:AbstractFloat}; statetype=Adiabatic(), available_states=Colon())
+    return NonEqState(distribution, dos, energygrid, statetype, available_states)
 end
 # ------------------------------------------------------------------------------------------------ #]

@@ -4,12 +4,14 @@ struct Diabatic end
 "Singleton type for labelling states as adiabatic."
 struct Adiabatic end
 
+
 """
     ElectronicDistribution{S}
 
 Abstract type for distributions of electronic degrees of freedom only.
 """
 abstract type ElectronicDistribution{S} end
+
 
 """
     PureState{S} <: ElectronicDistribution{S}
@@ -22,7 +24,7 @@ struct PureState{S} <: ElectronicDistribution{S}
 end
 PureState(state) = PureState(state, Diabatic())
 
-function density_matrix(d::PureState, nstates)
+function adiabatic_density_matrix(d::PureState, nstates)
     density = zeros(nstates, nstates)
     density[d.state, d.state] = 1
     return density
@@ -39,7 +41,7 @@ struct MixedState{T,S} <: ElectronicDistribution{S}
 end
 MixedState(state) = MixedState(state, Diabatic())
 
-function density_matrix(d::MixedState)
+function adiabatic_density_matrix(d::MixedState)
     density = zeros(length(d.populations), length(d.populations))
     density[diagind(density)] .= d.populations
     return density
@@ -61,7 +63,7 @@ function FermiDiracState(fermi_level, temperature; statetype=Adiabatic(), availa
 end
 fermi(ϵ, μ, β) = 1 / (1 + exp(β*(ϵ - μ)))
 
-function density_matrix(d::FermiDiracState, eigenvalues)
+function adiabatic_density_matrix(d::FermiDiracState, eigenvalues)
     density = zeros(length(eigenvalues), length(eigenvalues))
     density[diagind(density)] .= fermi.(eigenvalues, d.fermi_level, d.β)
     return density
@@ -79,9 +81,32 @@ struct NonEqState{S,T,A} <: ElectronicDistribution{S}
     statetype::S # usually the `adiabatic()` or `diabatic()`` labels
     available_states::A # need this, in general will default to `Colon()` as with above.
 end
-function NonEqState(dis_spline, dos_spline; statetype=Adiabatic(), available_states=Colon()) 
-    # would be nice to include type here `dis_spline::LinearInterpolation` but would have to change package dependencies 
-    # for NQCDistributions to include `DataInterpolations` which is potentially not worth it. 
+function NonEqState(dis_spline::LinearInterpolation, dos_spline::LinearInterpolation; statetype=Adiabatic(), available_states=Colon()) 
     return NonEqState(dis_spline, dos_spline, statetype, available_states)
 end
-# ------------------------------------------------------------------------------------------------ #]
+# ------------------------------------------------------------------------------------------------ #
+
+
+
+# ---------------------------------------- Density Matrix ---------------------------------------- #
+
+
+
+"Singleton type for labelling the density matrix occupations as statistical."
+struct Statistical end
+"Singleton type for labelling the density matrix occupations as binary."
+struct Binary end
+
+
+struct DensityMatrix{T,S} <: ElectronicDistribution{S}
+    diagonal::T
+    systemtype::S
+end
+function DensityMatrix(fermi_level::Float64, temperature::Float64; statetype=Adiabatic(), available_states=Colon(), systemtype=Binary())
+    dist = FermiDiracState(austrip(fermi_level), 1/austrip(temperature), statetype, available_states)
+    return DensityMatrix(dist, systemtype)
+end
+function DensityMatrix(dis_spline::LinearInterpolation, dos_spline::LinearInterpolation; statetype=Adiabatic(), available_states=Colon(), systemtype=Binary())
+    dist = NonEqState(dis_spline, dos_spline, statetype, available_states)
+    return DensityMatrix(dist, systemtype)
+end

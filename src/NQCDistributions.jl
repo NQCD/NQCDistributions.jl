@@ -31,6 +31,7 @@ export Adiabatic, Diabatic
 export PureState
 export MixedState
 export FermiDiracState
+export adiabatic_density_matrix
 export NonEqState # added to export new electronic state struct
 export Statistical, Binary
 export DensityMatrix

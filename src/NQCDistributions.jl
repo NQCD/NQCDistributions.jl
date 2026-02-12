@@ -7,6 +7,7 @@ using UnitfulAtomic: austrip
 using Distributions: Normal
 using RingPolymerArrays: NormalModeTransformation, transform_from_normal_modes!
 using LinearAlgebra: mul!, diagind
+using DataInterpolations: LinearInterpolation
 using ComponentArrays: ComponentVector
 
 include("sampleable_components.jl")

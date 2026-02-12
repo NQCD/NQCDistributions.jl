@@ -66,3 +66,18 @@ function density_matrix(d::FermiDiracState, eigenvalues)
     density[diagind(density)] .= fermi.(eigenvalues, d.fermi_level, d.β)
     return density
 end
+
+"""
+    NonEqState{S,T,A} <: ElectronicDistribution{S}
+
+Electronic distribution for Fermions following a supplied non-equilibrium distribution.
+"""
+struct NonEqState{S,T,A} <: ElectronicDistribution{S}
+    dis_spline::T # non-equilibrium distribution spline function
+    dos_spline::T # density of states distribution spline function
+    statetype::S # usually the `adiabatic()` or `diabatic()`` labels
+    available_states::A # need this, in general will default to `Colon()` as with above.
+end
+function NonEqState(dis_spline::LinearInterpolation, dos_spline::LinearInterpolation; statetype=Adiabatic(), available_states=Colon()) 
+    return NonEqState(dis_spline, dos_spline, statetype, available_states)
+end

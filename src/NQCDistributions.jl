@@ -30,6 +30,7 @@ export Adiabatic, Diabatic
 export PureState
 export MixedState
 export FermiDiracState
+export NonEqState
 
 include("dynamical_distribution.jl")
 export DynamicalDistribution

@@ -78,7 +78,7 @@ Electronic distribution for Fermions following a supplied non-equilibrium distri
 struct NonEqState{S,T,A} <: ElectronicDistribution{S}
     dis_spline::T # non-equilibrium distribution spline function
     dos_spline::T # density of states distribution spline function
-    statetype::S # usually the `adiabatic()` or `diabatic()`` labels
+    statetype::S # usually the `adiabatic()` or `diabatic()` labels
     available_states::A # need this, in general will default to `Colon()` as with above.
 end
 function NonEqState(dis_spline::LinearInterpolation, dos_spline::LinearInterpolation; statetype=Adiabatic(), available_states=Colon()) 

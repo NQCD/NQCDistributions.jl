@@ -20,6 +20,12 @@ Unitful = "1"
 UnitfulAtomic = "1"
 julia = "1"
 
+[weakdeps]
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+
+[extensions]
+NQCDistributionsCUDAExt = "CUDA"
+
 [extras]
 NQCDynamics = "36248dfb-79eb-4f4d-ab9c-e29ea5f33e14"
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"

@@ -1,12 +1,13 @@
 name = "NQCDistributions"
 uuid = "657014a1-bd25-4aa2-92cb-cbcede0310ad"
+version = "1.2.0"
 authors = ["James Gardner <james.gardner1421@gmail.com> and contributors"]
-version = "1.1.0"
 
 [deps]
 ComponentArrays = "b0b7db55-cfe3-40fc-9ded-d10e2dbeff66"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+NQCBase = "78c76ebc-5665-4934-b512-82d81b5cbfb7"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 RingPolymerArrays = "81cd853e-d334-476c-b156-f95acc8a32dc"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
@@ -15,6 +16,7 @@ UnitfulAtomic = "a7773ee8-282e-5fa2-be4e-bd808c38a91a"
 [compat]
 ComponentArrays = "0.11, 0.12, 0.13, 0.14, 0.15"
 Distributions = "0.25"
+NQCBase = "1.3"
 RingPolymerArrays = "0.1, 1"
 Unitful = "1"
 UnitfulAtomic = "1"

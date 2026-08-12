@@ -1,6 +1,6 @@
 name = "NQCDistributions"
 uuid = "657014a1-bd25-4aa2-92cb-cbcede0310ad"
-version = "1.2.0"
+version = "1.1.0"
 authors = ["James Gardner <james.gardner1421@gmail.com> and contributors"]
 
 [deps]

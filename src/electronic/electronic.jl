@@ -1,9 +1,5 @@
 
-"Singleton type for labelling states as diabatic."
-struct Diabatic end
-"Singleton type for labelling states as adiabatic."
-struct Adiabatic end
-
+using NQCBase: Adiabatic, Diabatic
 
 """
     ElectronicDistribution{S}
@@ -24,7 +20,7 @@ struct PureState{S} <: ElectronicDistribution{S}
 end
 PureState(state) = PureState(state, Diabatic())
 
-function adiabatic_density_matrix(d::PureState, nstates)
+function density_matrix(d::PureState, nstates)
     density = zeros(nstates, nstates)
     density[d.state, d.state] = 1
     return density
@@ -41,7 +37,7 @@ struct MixedState{T,S} <: ElectronicDistribution{S}
 end
 MixedState(state) = MixedState(state, Diabatic())
 
-function adiabatic_density_matrix(d::MixedState)
+function density_matrix(d::MixedState)
     density = zeros(length(d.populations), length(d.populations))
     density[diagind(density)] .= d.populations
     return density
@@ -63,7 +59,7 @@ function FermiDiracState(fermi_level, temperature; statetype=Adiabatic(), availa
 end
 fermi(ϵ, μ, β) = 1 / (1 + exp(β*(ϵ - μ)))
 
-function adiabatic_density_matrix(d::FermiDiracState, eigenvalues)
+function density_matrix(d::FermiDiracState, eigenvalues)
     density = zeros(length(eigenvalues), length(eigenvalues))
     density[diagind(density)] .= fermi.(eigenvalues, d.fermi_level, d.β)
     return density
